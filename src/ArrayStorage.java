@@ -18,15 +18,19 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        return storage[getResumeIndex(uuid)];
+        int resumeIndex = getResumeIndex(uuid);
+        return resumeIndex != -1 ? storage[resumeIndex] : null;
     }
 
     void delete(String uuid) {
-        storageSize--;
-        for (int i = getResumeIndex(uuid); i < storageSize; i++) {
-            storage[i] = storage[i + 1];
+        int resumeIndex = getResumeIndex(uuid);
+        if (resumeIndex != -1) {
+            storageSize--;
+            for (int i = resumeIndex; i < storageSize; i++) {
+                storage[i] = storage[i + 1];
+            }
+            storage[storageSize] = null;
         }
-        storage[storageSize] = null;
     }
 
     /**
@@ -44,12 +48,15 @@ public class ArrayStorage {
     }
 
     private int getResumeIndex(String uuid) {
-        int resumeIndex = 0;
+        int resumeIndex = -1;
         for (int i = 0; i < storageSize; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 resumeIndex = i;
                 break;
             }
+        }
+        if (resumeIndex == -1) {
+            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
         }
         return resumeIndex;
     }
