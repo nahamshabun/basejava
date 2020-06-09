@@ -24,30 +24,54 @@ public class ArrayStorage {
 
         if (resumeIndex == -1) {
             System.out.println("There's no resume with id \"" + resumeUuid + "\" in storage");
-        } else {
-            storage[resumeIndex] = resume;
+            return;
         }
+
+        storage[resumeIndex] = resume;
     }
 
     public void save(Resume resume) {
+        if (size ==  storage.length) {
+            System.out.println("Storage is full");
+            return;
+        }
+
+        String resumeUuid = resume.getUuid();
+        int resumeIndex = getResumeIndex(resumeUuid);
+
+        if (resumeIndex != -1) {
+            System.out.println("Resume with id \"" + resumeUuid + "\" already exists");
+            return;
+        }
+
         storage[size] = resume;
         size++;
     }
 
     public Resume get(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
-        return resumeIndex != -1 ? storage[resumeIndex] : null;
+
+        if (resumeIndex == -1) {
+            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
+            return null;
+        }
+
+        return storage[resumeIndex];
     }
 
     public void delete(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
-        if (resumeIndex != -1) {
-            size--;
-            for (int i = resumeIndex; i < size; i++) {
-                storage[i] = storage[i + 1];
-            }
-            storage[size] = null;
+
+        if (resumeIndex == -1) {
+            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
+            return;
         }
+
+        size--;
+        for (int i = resumeIndex; i < size; i++) {
+            storage[i] = storage[i + 1];
+        }
+        storage[size] = null;
     }
 
     /**
