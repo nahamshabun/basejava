@@ -1,3 +1,7 @@
+package com.urise.webapp.storage;
+
+import com.urise.webapp.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -7,24 +11,24 @@ public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
     private int storageSize = 0;
 
-    void clear() {
+    public void clear() {
         for (int i = storageSize - 1; i >= 0; i--) {
             storage[i] = null;
         }
         storageSize = 0;
     }
 
-    void save(Resume r) {
+    public void save(Resume r) {
         storage[storageSize] = r;
         storageSize++;
     }
 
-    Resume get(String uuid) {
+    public Resume get(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
         return resumeIndex != -1 ? storage[resumeIndex] : null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
         if (resumeIndex != -1) {
             storageSize--;
@@ -38,18 +42,18 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, storageSize);
     }
 
-    int size() {
+    public int size() {
         return storageSize;
     }
 
     private int getResumeIndex(String uuid) {
         int resumeIndex = -1;
         for (int i = 0; i < storageSize; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 resumeIndex = i;
                 break;
             }
