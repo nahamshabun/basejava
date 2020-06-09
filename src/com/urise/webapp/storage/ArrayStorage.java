@@ -9,18 +9,29 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     private Resume[] storage = new Resume[10000];
-    private int storageSize = 0;
+    private int size = 0;
 
     public void clear() {
-        for (int i = storageSize - 1; i >= 0; i--) {
+        for (int i = size - 1; i >= 0; i--) {
             storage[i] = null;
         }
-        storageSize = 0;
+        size = 0;
     }
 
-    public void save(Resume r) {
-        storage[storageSize] = r;
-        storageSize++;
+    public void update(Resume resume) {
+        String resumeUuid = resume.getUuid();
+        int resumeIndex = getResumeIndex(resumeUuid);
+
+        if (resumeIndex == -1) {
+            System.out.println("There's no resume with id \"" + resumeUuid + "\" in storage");
+        } else {
+            storage[resumeIndex] = resume;
+        }
+    }
+
+    public void save(Resume resume) {
+        storage[size] = resume;
+        size++;
     }
 
     public Resume get(String uuid) {
@@ -31,11 +42,11 @@ public class ArrayStorage {
     public void delete(String uuid) {
         int resumeIndex = getResumeIndex(uuid);
         if (resumeIndex != -1) {
-            storageSize--;
-            for (int i = resumeIndex; i < storageSize; i++) {
+            size--;
+            for (int i = resumeIndex; i < size; i++) {
                 storage[i] = storage[i + 1];
             }
-            storage[storageSize] = null;
+            storage[size] = null;
         }
     }
 
@@ -43,24 +54,23 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, storageSize);
+        return Arrays.copyOfRange(storage, 0, size);
     }
 
     public int size() {
-        return storageSize;
+        return size;
     }
 
     private int getResumeIndex(String uuid) {
         int resumeIndex = -1;
-        for (int i = 0; i < storageSize; i++) {
+
+        for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 resumeIndex = i;
                 break;
             }
         }
-        if (resumeIndex == -1) {
-            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
-        }
+
         return resumeIndex;
     }
 }
