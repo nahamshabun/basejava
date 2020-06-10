@@ -66,9 +66,8 @@ public class ArrayStorage {
         }
 
         size--;
-        for (int i = resumeIndex; i < size; i++) {
-            storage[i] = storage[i + 1];
-        }
+        if (size - resumeIndex >= 0)
+            System.arraycopy(storage, resumeIndex + 1, storage, resumeIndex, size - resumeIndex);
         storage[size] = null;
     }
 
