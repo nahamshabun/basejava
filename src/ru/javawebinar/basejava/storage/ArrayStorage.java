@@ -1,6 +1,6 @@
-package com.urise.webapp.storage;
+package ru.javawebinar.basejava.storage;
 
-import com.urise.webapp.model.Resume;
+import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
@@ -83,15 +83,12 @@ public class ArrayStorage {
     }
 
     private int getResumeIndex(String uuid) {
-        int resumeIndex = -1;
-
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                resumeIndex = i;
-                break;
+                return i;
             }
         }
 
-        return resumeIndex;
+        return -1;
     }
 }
