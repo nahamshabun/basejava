@@ -1,0 +1,28 @@
+package ru.javawebinar.basejava.storage;
+
+import ru.javawebinar.basejava.model.Resume;
+
+/**
+ * Array based storage for Resumes
+ */
+public abstract class AbstractArrayStorage implements Storage {
+    protected static final int STORAGE_LIMIT = 10000;
+
+    protected Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size = 0;
+
+    public int size() {
+        return size;
+    }
+
+    public Resume get(String uuid) {
+        int resumeIndex = getResumeIndex(uuid);
+        if (resumeIndex == -1) {
+            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
+            return null;
+        }
+        return storage[resumeIndex];
+    }
+
+    protected abstract int getResumeIndex(String uuid);
+}
