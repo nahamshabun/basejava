@@ -21,4 +21,10 @@ public class ArrayStorage extends AbstractArrayStorage {
     protected void insertResume(Resume resume, int insertionPoint) {
          storage[size] = resume;
     }
+
+    // size was decremented (as the resume was deleted) - so it's the index of last element at this point
+    @Override
+    protected void fillTheGap(int deletedResumeIndex) {
+        storage[deletedResumeIndex] = storage[size];
+    }
 }

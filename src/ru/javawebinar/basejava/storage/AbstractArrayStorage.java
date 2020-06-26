@@ -8,7 +8,7 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public abstract class AbstractArrayStorage implements Storage {
-    protected static final int STORAGE_LIMIT = 10000;
+    protected static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
@@ -63,8 +63,9 @@ public abstract class AbstractArrayStorage implements Storage {
         }
 
         size--;
-        if (size - resumeIndex >= 0)
-            System.arraycopy(storage, resumeIndex + 1, storage, resumeIndex, size - resumeIndex);
+        if (resumeIndex != size) {
+            fillTheGap(resumeIndex);
+        }
         storage[size] = null;
     }
 
@@ -72,7 +73,7 @@ public abstract class AbstractArrayStorage implements Storage {
      * @return array, contains only Resumes in storage (without null)
      */
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        return Arrays.copyOf(storage, size);
     }
 
     public Resume get(String uuid) {
@@ -84,6 +85,7 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[resumeIndex];
     }
 
+    protected abstract void fillTheGap(int deletedResumeIndex);
     protected abstract void insertResume(Resume resume, int insertionPoint);
     protected abstract int getResumeIndex(String uuid);
 }

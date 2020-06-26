@@ -17,4 +17,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         System.arraycopy(storage, insertionPoint, storage, insertionPoint + 1, size - insertionPoint);
         storage[insertionPoint] = resume;
     }
+
+    @Override
+    protected void fillTheGap(int deletedResumeIndex) {
+        System.arraycopy(storage, deletedResumeIndex + 1, storage, deletedResumeIndex, size - deletedResumeIndex);
+    }
 }
