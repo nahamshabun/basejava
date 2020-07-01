@@ -16,15 +16,14 @@ public class ArrayStorage extends AbstractArrayStorage {
         return -1;
     }
 
-    // insertionPoint is only needed for SortedArrayStorage, so it's not used here
     @Override
-    protected void insertResume(Resume resume, int insertionPoint) {
+    protected void insertResume(Resume resume) {
          storage[size] = resume;
     }
 
     // size was decremented (as the resume was deleted) - so it's the index of last element at this point
     @Override
-    protected void fillTheGap(int deletedResumeIndex) {
+    protected void fillGap(int deletedResumeIndex) {
         storage[deletedResumeIndex] = storage[size];
     }
 }

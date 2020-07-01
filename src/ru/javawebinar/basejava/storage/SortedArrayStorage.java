@@ -13,13 +13,15 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertResume(Resume resume, int insertionPoint) {
-        System.arraycopy(storage, insertionPoint, storage, insertionPoint + 1, size - insertionPoint);
-        storage[insertionPoint] = resume;
+    protected void insertResume(Resume resume) {
+        int insertionIndex = getResumeIndex(resume.getUuid());
+        insertionIndex = Math.abs(insertionIndex + 1);
+        System.arraycopy(storage, insertionIndex, storage, insertionIndex + 1, size - insertionIndex);
+        storage[insertionIndex] = resume;
     }
 
     @Override
-    protected void fillTheGap(int deletedResumeIndex) {
+    protected void fillGap(int deletedResumeIndex) {
         System.arraycopy(storage, deletedResumeIndex + 1, storage, deletedResumeIndex, size - deletedResumeIndex);
     }
 }

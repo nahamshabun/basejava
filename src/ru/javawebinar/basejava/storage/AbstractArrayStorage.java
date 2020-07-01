@@ -23,15 +23,15 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void update(Resume resume) {
-        String resumeUuid = resume.getUuid();
-        int resumeIndex = getResumeIndex(resumeUuid);
+        String uuid = resume.getUuid();
+        int index = getResumeIndex(uuid);
 
-        if (resumeIndex < 0) {
-            System.out.println("There's no resume with id \"" + resumeUuid + "\" in storage");
+        if (index < 0) {
+            System.out.println("There's no resume with id \"" + uuid + "\" in storage");
             return;
         }
 
-        storage[resumeIndex] = resume;
+        storage[index] = resume;
     }
 
     public void save(Resume resume) {
@@ -40,31 +40,31 @@ public abstract class AbstractArrayStorage implements Storage {
             return;
         }
 
-        String resumeUuid = resume.getUuid();
-        int resumeIndex = getResumeIndex(resumeUuid);
+        String uuid = resume.getUuid();
+        int index = getResumeIndex(uuid);
 
-        if (resumeIndex >= 0) {
-            System.out.println("Resume with id \"" + resumeUuid + "\" already exists");
+        if (index >= 0) {
+            System.out.println("Resume with id \"" + uuid + "\" already exists");
             return;
         }
 
-        // if we get here, resumeIndex is negative
+        // if we get here, index is negative
         // so actual insertion index is calculated on the go and then passed to the method
-        insertResume(resume, Math.abs(resumeIndex + 1));
+        insertResume(resume);
         size++;
     }
 
     public void delete(String uuid) {
-        int resumeIndex = getResumeIndex(uuid);
+        int index = getResumeIndex(uuid);
 
-        if (resumeIndex < 0) {
+        if (index < 0) {
             System.out.println("There's no resume with id \"" + uuid + "\" in storage");
             return;
         }
 
         size--;
-        if (resumeIndex != size) {
-            fillTheGap(resumeIndex);
+        if (index != size) {
+            fillGap(index);
         }
         storage[size] = null;
     }
@@ -77,15 +77,15 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public Resume get(String uuid) {
-        int resumeIndex = getResumeIndex(uuid);
-        if (resumeIndex < 0) {
+        int index = getResumeIndex(uuid);
+        if (index < 0) {
             System.out.println("There's no resume with id \"" + uuid + "\" in storage");
             return null;
         }
-        return storage[resumeIndex];
+        return storage[index];
     }
 
-    protected abstract void fillTheGap(int deletedResumeIndex);
-    protected abstract void insertResume(Resume resume, int insertionPoint);
+    protected abstract void fillGap(int deletedResumeIndex);
+    protected abstract void insertResume(Resume resume);
     protected abstract int getResumeIndex(String uuid);
 }
