@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractArrayStorageTest {
 
-    protected AbstractArrayStorage storage;
+    private AbstractArrayStorage storage;
 
     public AbstractArrayStorageTest(AbstractArrayStorage storage) {
         this.storage = storage;
@@ -60,21 +60,17 @@ abstract class AbstractArrayStorageTest {
 
         @Test
         @DisplayName("when storage already has this resume")
-        void testResumeExists() {
+        void testResumeExist() {
             Resume resume = new Resume("test");
             storage.save(resume);
-            int sizeBeforeSave = storage.size();
             assertThrows(ExistStorageException.class, () -> storage.save(resume));
-            assertEquals(sizeBeforeSave, storage.size());
         }
 
         @Test
         @DisplayName("when storage is full")
         void testFullStorage() {
             assertDoesNotThrow(() -> fillStorage(AbstractArrayStorage.STORAGE_LIMIT));
-            int sizeBeforeSave = storage.size();
             assertThrows(StorageException.class, () -> storage.save(new Resume()));
-            assertEquals(sizeBeforeSave, storage.size());
         }
 
         @Test
@@ -93,9 +89,7 @@ abstract class AbstractArrayStorageTest {
         @Test
         @DisplayName("when resume not found")
         void testResumeNotFound() {
-            int sizeBeforeDelete = storage.size();
             assertThrows(NotExistStorageException.class, () -> storage.delete("dummy"));
-            assertEquals(sizeBeforeDelete, storage.size());
         }
 
         @Test
@@ -138,9 +132,10 @@ abstract class AbstractArrayStorageTest {
         @Test
         @DisplayName("when storage has resume with this uuid")
         void testUuidFound() {
-            storage.save(new Resume("valid"));
+            Resume resume = new Resume("valid");
+            storage.save(resume);
             assertDoesNotThrow(() -> storage.get("valid"));
-            assertEquals("valid", storage.get("valid").getUuid());
+            assertEquals(resume, storage.get("valid"));
         }
     }
 
