@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -30,8 +31,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean exists(String uuid) {
-        return getResumeIndex(uuid) >= 0;
+    protected boolean has(String uuid) {
+        return getSearchKey(uuid) >= 0;
     }
 
     @Override
@@ -45,17 +46,17 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected Resume performGet(String uuid) {
-        return storage[getResumeIndex(uuid)];
+        return storage[getSearchKey(uuid)];
     }
 
     @Override
     protected void performUpdate(Resume resume, String uuid) {
-        storage[getResumeIndex(uuid)] = resume;
+        storage[getSearchKey(uuid)] = resume;
     }
 
     @Override
     protected void performDelete(String uuid) {
-        int index = getResumeIndex(uuid);
+        int index = getSearchKey(uuid);
         size--;
         if (index != size) {
             fillGap(index);
@@ -63,7 +64,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         storage[size] = null;
     }
 
+    // for array-based storage getSearchKey() returns index:
+    // - positive, if storage has resume with the uuid
+    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion
+    @Override
+    protected abstract Integer getSearchKey(String uuid);
+
     protected abstract void fillGap(int deletedResumeIndex);
+
     protected abstract void insertResume(Resume resume);
-    protected abstract int getResumeIndex(String uuid);
 }

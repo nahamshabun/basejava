@@ -9,7 +9,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void save(Resume resume) {
         final String uuid = resume.getUuid();
-        if (exists(uuid)) {
+        if (has(uuid)) {
             throw new ExistStorageException(uuid);
         }
         performSave(resume);
@@ -17,7 +17,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        if (!exists(uuid)) {
+        if (!has(uuid)) {
             throw new NotExistStorageException(uuid);
         }
         return performGet(uuid);
@@ -26,7 +26,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void update(Resume resume) {
         final String uuid = resume.getUuid();
-        if (!exists(uuid)) {
+        if (!has(uuid)) {
             throw new NotExistStorageException(uuid);
         }
         performUpdate(resume, uuid);
@@ -34,15 +34,22 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        if (!exists(uuid)) {
+        if (!has(uuid)) {
             throw new NotExistStorageException(uuid);
         }
         performDelete(uuid);
     }
 
-    protected abstract boolean exists(String uuid);
+    // for array-based types of storage returns Integer index, for MapStorage - String uuid
+    protected abstract Object getSearchKey(String uuid);
+
+    protected abstract boolean has(String uuid);
+
     protected abstract void performSave(Resume resume);
+
     protected abstract Resume performGet(String uuid);
+
     protected abstract void performUpdate(Resume resume, String uuid);
+
     protected abstract void performDelete(String uuid);
 }
