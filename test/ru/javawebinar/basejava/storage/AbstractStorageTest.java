@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 abstract class AbstractStorageTest {
     Storage storage;
 
-    public AbstractStorageTest(AbstractStorage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
