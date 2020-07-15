@@ -12,10 +12,9 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     }
 
     @Override
-    protected void insertResume(Resume resume) {
-        // at first insertion index is negative, then it's transformed into a valid one
-        int insertionIndex = Arrays.binarySearch(storage, 0, size, resume);
-        insertionIndex = Math.abs(insertionIndex + 1);
+    protected void insertResume(Resume resume, int index) {
+        // method receives negative index, then it's transformed into a valid one
+        int insertionIndex = Math.abs(index + 1);
         System.arraycopy(storage, insertionIndex, storage, insertionIndex + 1, size - insertionIndex);
         storage[insertionIndex] = resume;
     }

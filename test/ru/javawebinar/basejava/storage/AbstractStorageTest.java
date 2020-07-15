@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AbstractStorageTest {
-    protected AbstractStorage storage;
+abstract class AbstractStorageTest {
+    Storage storage;
 
     public AbstractStorageTest(AbstractStorage storage) {
         this.storage = storage;

@@ -3,9 +3,10 @@ package ru.javawebinar.basejava.storage;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
-    protected final ArrayList<Resume> storage = new ArrayList<>();
+    protected final List<Resume> storage = new ArrayList<>();
 
     @Override
     public int size() {
@@ -23,28 +24,28 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean has(String uuid) {
-            return getSearchKey(uuid) >= 0;
+    protected boolean contains(Object index) {
+            return (Integer) index >= 0;
     }
 
     @Override
-    protected void performSave(Resume resume) {
+    protected void performSave(Resume resume, Object index) {
         storage.add(resume);
     }
 
     @Override
-    protected Resume performGet(String uuid) {
-        return storage.get(getSearchKey(uuid));
+    protected Resume performGet(String uuid, Object index) {
+        return storage.get((Integer) index);
     }
 
     @Override
-    protected void performUpdate(Resume resume, String uuid) {
-        storage.set(getSearchKey(uuid), resume);
+    protected void performUpdate(Resume resume, Object index) {
+        storage.set((Integer) index, resume);
     }
 
     @Override
-    protected void performDelete(String uuid) {
-        storage.remove((int)getSearchKey(uuid));
+    protected void performDelete(String uuid, Object index) {
+        storage.remove((int) index);
     }
 
     @Override

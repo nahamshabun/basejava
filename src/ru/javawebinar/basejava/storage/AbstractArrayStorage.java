@@ -31,46 +31,46 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean has(String uuid) {
-        return getSearchKey(uuid) >= 0;
+    protected boolean contains(Object index) {
+        return (Integer) index >= 0;
     }
 
     @Override
-    protected void performSave(Resume resume) {
+    protected void performSave(Resume resume, Object index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage is full");
         }
-        insertResume(resume);
+        insertResume(resume, (Integer) index);
         size++;
     }
 
     @Override
-    protected Resume performGet(String uuid) {
-        return storage[getSearchKey(uuid)];
+    protected Resume performGet(String uuid, Object index) {
+        return storage[(Integer) index];
     }
 
     @Override
-    protected void performUpdate(Resume resume, String uuid) {
-        storage[getSearchKey(uuid)] = resume;
+    protected void performUpdate(Resume resume, Object index) {
+        storage[(Integer) index] = resume;
     }
 
     @Override
-    protected void performDelete(String uuid) {
-        int index = getSearchKey(uuid);
+    protected void performDelete(String uuid, Object index) {
+        int intIndex = (Integer) index;
         size--;
-        if (index != size) {
-            fillGap(index);
+        if (intIndex != size) {
+            fillGap(intIndex);
         }
         storage[size] = null;
     }
 
     // for array-based storage getSearchKey() returns index:
     // - positive, if storage has resume with the uuid
-    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion
+    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion)
     @Override
     protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void fillGap(int deletedResumeIndex);
 
-    protected abstract void insertResume(Resume resume);
+    protected abstract void insertResume(Resume resume, int index);
 }
