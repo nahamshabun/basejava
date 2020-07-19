@@ -1,6 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
-class ListStorageTest extends AbstractStorageTest {
+import org.junit.jupiter.api.extension.Extension;
+
+public class ListStorageTest extends AbstractStorageTest implements Extension {
     public ListStorageTest() {
         super(new ListStorage());
     }
