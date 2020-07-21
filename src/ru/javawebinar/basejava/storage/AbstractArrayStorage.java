@@ -26,19 +26,20 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
+    // for array-based storage getSearchKey() returns index:
+    // - positive, if storage has resume with the uuid
+    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion)
     @Override
-    public List<Resume> getAllSorted() {
-        Resume[] trimmedStorage = Arrays.copyOf(storage, size);
-        List<Resume> result = Arrays.asList(trimmedStorage);
-        if (!this.getClass().equals(SortedArrayStorage.class)){
-            result.sort(Resume.FULL_NAME_COMPARATOR);
-        }
-        return result;
-    }
+    protected abstract Integer getSearchKey(String uuid);
 
     @Override
     protected boolean contains(Object index) {
         return (Integer) index >= 0;
+    }
+
+    @Override
+    protected List<Resume> performGetAll() {
+        return Arrays.asList(Arrays.copyOf(storage, size));
     }
 
     @Override
@@ -51,7 +52,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume performGet(String uuid, Object index) {
+    protected Resume performGet(Object index) {
         return storage[(Integer) index];
     }
 
@@ -61,17 +62,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void performDelete(String uuid, Object index) {
+    protected void performDelete(Object index) {
         size--;
         fillGap((int) index);
         storage[size] = null;
     }
 
-    // for array-based storage getSearchKey() returns index:
-    // - positive, if storage has resume with the uuid
-    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion)
-    @Override
-    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void fillGap(int deletedResumeIndex);
 

@@ -11,6 +11,16 @@ public class MapResumeStorage extends AbstractMapStorage {
 
     @Override
     protected boolean contains(Object resume) {
-        return storage.containsValue(resume);
+        return resume != null;
+    }
+
+    @Override
+    protected Resume performGet(Object resume) {
+        return (Resume) resume;
+    }
+
+    @Override
+    protected void performDelete(Object resume) {
+        storage.remove(((Resume) resume).getUuid());
     }
 }

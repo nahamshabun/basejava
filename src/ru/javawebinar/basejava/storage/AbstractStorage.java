@@ -4,6 +4,9 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
 
     @Override
@@ -15,7 +18,7 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public Resume get(String uuid) {
         Object searchKey = getSearchKeyIfExist(uuid);
-        return performGet(uuid, searchKey);
+        return performGet(searchKey);
     }
 
     @Override
@@ -27,8 +30,16 @@ public abstract class AbstractStorage implements Storage {
     @Override
     public void delete(String uuid) {
         Object searchKey = getSearchKeyIfExist(uuid);
-        performDelete(uuid, searchKey);
+        performDelete(searchKey);
     }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        List<Resume> result = performGetAll();
+        Collections.sort(result);
+        return result;
+    }
+
 
     private Object getSearchKeyIfNotExist(String uuid) {
         Object searchKey = getSearchKey(uuid);
@@ -51,11 +62,13 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract boolean contains(Object searchKey);
 
+    protected abstract List<Resume> performGetAll();
+
     protected abstract void performSave(Resume resume, Object searchKey);
 
-    protected abstract Resume performGet(String uuid, Object searchKey);
+    protected abstract Resume performGet(Object searchKey);
 
     protected abstract void performUpdate(Resume resume, Object searchKey);
 
-    protected abstract void performDelete(String uuid, Object searchKey);
+    protected abstract void performDelete(Object searchKey);
 }

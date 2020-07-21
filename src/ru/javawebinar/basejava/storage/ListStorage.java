@@ -2,7 +2,8 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
     protected final List<Resume> storage = new ArrayList<>();
@@ -18,15 +19,23 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> result = new ArrayList<>(storage);
-        result.sort(Comparator.comparing(Resume::getFullName));
-        return result;
+    protected Integer getSearchKey(String uuid) {
+        for (Resume resume : storage) {
+            if (resume.getUuid().equals(uuid)) {
+                return storage.indexOf(resume);
+            }
+        }
+        return -1;
     }
 
     @Override
     protected boolean contains(Object index) {
-            return (Integer) index >= 0;
+        return (Integer) index >= 0;
+    }
+
+    @Override
+    protected List<Resume> performGetAll() {
+        return new ArrayList<>(storage);
     }
 
     @Override
@@ -35,7 +44,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Resume performGet(String uuid, Object index) {
+    protected Resume performGet(Object index) {
         return storage.get((Integer) index);
     }
 
@@ -45,17 +54,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void performDelete(String uuid, Object index) {
+    protected void performDelete(Object index) {
         storage.remove((int) index);
-    }
-
-    @Override
-    protected Integer getSearchKey(String uuid) {
-        for (Resume resume : storage) {
-            if (resume.getUuid().equals(uuid)) {
-                return storage.indexOf(resume);
-            }
-        }
-        return -1;
     }
 }
