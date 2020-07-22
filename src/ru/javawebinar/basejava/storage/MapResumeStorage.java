@@ -2,7 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.Resume;
 
-public class MapResumeStorage extends AbstractMapStorage {
+public class MapResumeStorage extends AbstractMapStorage<Resume> {
 
     @Override
     protected Resume getSearchKey(String uuid) {
@@ -10,17 +10,17 @@ public class MapResumeStorage extends AbstractMapStorage {
     }
 
     @Override
-    protected boolean contains(Object resume) {
+    protected boolean contains(Resume resume) {
         return resume != null;
     }
 
     @Override
-    protected Resume performGet(Object resume) {
-        return (Resume) resume;
+    protected Resume performGet(Resume resume) {
+        return resume;
     }
 
     @Override
-    protected void performDelete(Object resume) {
-        storage.remove(((Resume) resume).getUuid());
+    protected void performDelete(Resume resume) {
+        storage.remove(resume.getUuid());
     }
 }

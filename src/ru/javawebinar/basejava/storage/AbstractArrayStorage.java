@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10_000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -26,15 +26,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    // for array-based storage getSearchKey() returns index:
-    // - positive, if storage has resume with the uuid
-    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion)
     @Override
-    protected abstract Integer getSearchKey(String uuid);
-
-    @Override
-    protected boolean contains(Object index) {
-        return (Integer) index >= 0;
+    protected boolean contains(Integer index) {
+        return index >= 0;
     }
 
     @Override
@@ -43,31 +37,36 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected void performSave(Resume resume, Object index) {
+    protected void performSave(Resume resume, Integer index) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage is full");
         }
-        insertResume(resume, (Integer) index);
+        insertResume(resume, index);
         size++;
     }
 
     @Override
-    protected Resume performGet(Object index) {
-        return storage[(Integer) index];
+    protected Resume performGet(Integer index) {
+        return storage[index];
     }
 
     @Override
-    protected void performUpdate(Resume resume, Object index) {
-        storage[(Integer) index] = resume;
+    protected void performUpdate(Resume resume, Integer index) {
+        storage[index] = resume;
     }
 
     @Override
-    protected void performDelete(Object index) {
+    protected void performDelete(Integer index) {
         size--;
-        fillGap((int) index);
+        fillGap(index);
         storage[size] = null;
     }
 
+    // for array-based storage getSearchKey() returns index:
+    // - positive, if storage has resume with the uuid
+    // - negative otherwise (for SortedArrayStorage this negative index is also point of insertion)
+    @Override
+    protected abstract Integer getSearchKey(String uuid);
 
     protected abstract void fillGap(int deletedResumeIndex);
 
