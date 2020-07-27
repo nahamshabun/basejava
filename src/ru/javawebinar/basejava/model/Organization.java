@@ -7,16 +7,16 @@ public class Organization {
     private Link homePage;
     private YearMonth from;
     private YearMonth to;
-    private String descriptionTitle;
-    private String descriptionBody;
+    private String title;
+    private String description;
 
-    public Organization(String name, Link homePage, YearMonth from, YearMonth to, String descriptionTitle, String descriptionBody) {
+    public Organization(String name, Link homePage, YearMonth from, YearMonth to, String title, String description) {
         this.name = name;
         this.homePage = homePage;
         this.from = from;
         this.to = to;
-        this.descriptionTitle = descriptionTitle;
-        this.descriptionBody = descriptionBody;
+        this.title = title;
+        this.description = description;
     }
 
     @Override
@@ -26,8 +26,8 @@ public class Organization {
                 ", homePage=" + homePage +
                 ", from=" + from +
                 ", to=" + to +
-                ", descriptionTitle='" + descriptionTitle + '\'' +
-                ", descriptionBody='" + descriptionBody + '\'' +
+                ", descriptionTitle='" + title + '\'' +
+                ", descriptionBody='" + description + '\'' +
                 '}';
     }
 }
