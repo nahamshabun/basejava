@@ -1,7 +1,7 @@
 package ru.javawebinar.basejava.model;
 
 public class TextSection extends AbstractSection {
-    private String content;
+    private final String content;
 
     public TextSection(String content) {
         this.content = content;
@@ -9,8 +9,6 @@ public class TextSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "TextSection{" +
-                "content='" + content + '\'' +
-                '}';
+        return content + "\n";
     }
 }

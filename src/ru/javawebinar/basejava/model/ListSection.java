@@ -11,8 +11,6 @@ public class ListSection extends AbstractSection {
 
     @Override
     public String toString() {
-        return "ListSection{" +
-                "content=" + content +
-                '}';
+        return content + "\n";
     }
 }

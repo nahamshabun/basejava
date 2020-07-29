@@ -1,33 +1,18 @@
 package ru.javawebinar.basejava.model;
 
-import java.time.YearMonth;
+import java.util.List;
 
 public class Organization {
-    private String name;
-    private Link homePage;
-    private YearMonth from;
-    private YearMonth to;
-    private String title;
-    private String description;
+    private final List<Period> periods;
+    private final Link homePage;
 
-    public Organization(String name, Link homePage, YearMonth from, YearMonth to, String title, String description) {
-        this.name = name;
-        this.homePage = homePage;
-        this.from = from;
-        this.to = to;
-        this.title = title;
-        this.description = description;
+    public Organization(String name, String url, List<Period> periods) {
+        this.homePage = new Link(url, name);
+        this.periods = periods;
     }
 
     @Override
     public String toString() {
-        return "Organization{" +
-                "name='" + name + '\'' +
-                ", homePage=" + homePage +
-                ", from=" + from +
-                ", to=" + to +
-                ", descriptionTitle='" + title + '\'' +
-                ", descriptionBody='" + description + '\'' +
-                '}';
+        return homePage + "\n" + periods;
     }
 }
