@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.model;
 
 import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.UUID;
 
 public class ResumeTestData {
     public static Resume getTestResume(String uuid, String fullName) {
@@ -45,5 +46,10 @@ public class ResumeTestData {
         resume.addSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(ed1, ed2)));
         System.out.println("resume created and returned");
         return resume;
+    }
+
+
+    public static Resume getTestResume(String fullName) {
+        return getTestResume(UUID.randomUUID().toString(), fullName);
     }
 }

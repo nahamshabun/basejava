@@ -93,7 +93,7 @@ public abstract class AbstractStorageTest {
         @Test
         @DisplayName("when resume not found")
         void testResumeNotFound() {
-            assertThrows(NotExistStorageException.class, () -> storage.update(new Resume("dummy")));
+            assertThrows(NotExistStorageException.class, () -> storage.update(ResumeTestData.getTestResume("dummy")));
         }
 
         @Test
@@ -130,7 +130,7 @@ public abstract class AbstractStorageTest {
     // helper methods
     void fillStorage(int numOfResumes) {
         for (int i = 0; i < numOfResumes; i++) {
-            storage.save(new Resume("fullName" + i));
+            storage.save(ResumeTestData.getTestResume("fullName" + i));
         }
     }
 }
