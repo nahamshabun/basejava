@@ -1,14 +1,14 @@
 package ru.javawebinar.basejava.model;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Resume implements Comparable<Resume> {
     private final String uuid;
     private final String fullName;
-    private final Map<ContactType, String> contacts = new HashMap<>();
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
     private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
@@ -37,20 +37,19 @@ public class Resume implements Comparable<Resume> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Resume resume = (Resume) obj;
-        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Resume resume = (Resume) o;
+        return uuid.equals(resume.uuid) &&
+                fullName.equals(resume.fullName) &&
+                contacts.equals(resume.contacts) &&
+                sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode() + fullName.hashCode();
+        return Objects.hash(uuid, fullName, contacts, sections);
     }
 
     @Override

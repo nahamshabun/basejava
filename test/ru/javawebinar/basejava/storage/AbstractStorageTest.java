@@ -1,11 +1,13 @@
 package ru.javawebinar.basejava.storage;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.ResumeTestData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,10 +16,21 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+    private static final Resume resume1 = ResumeTestData.getTestResume("uuid1", "fullName1");
+    private static final Resume resume2 = ResumeTestData.getTestResume("uuid2", "fullName2");
+    private static final Resume resume3 = ResumeTestData.getTestResume("uuid3", "fullName3");
+    private static final int sizeBeforeTest = 3;
     Storage storage;
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
+    }
+
+    @BeforeEach
+    private void setUp() {
+        storage.save(resume1);
+        storage.save(resume2);
+        storage.save(resume3);
     }
 
     @Nested
@@ -27,17 +40,14 @@ public abstract class AbstractStorageTest {
         @Test
         @DisplayName("when resume is found")
         void testResumeExist() {
-            Resume resume = new Resume("test");
-            storage.save(resume);
-            assertThrows(ExistStorageException.class, () -> storage.save(resume));
+            assertThrows(ExistStorageException.class, () -> storage.save(resume1));
         }
 
         @Test
         @DisplayName("when resume not found")
         void testResumeNotExist() {
-            int sizeBeforeSave = storage.size();
-            assertDoesNotThrow(() -> storage.save(new Resume("testFullName")));
-            assertEquals(sizeBeforeSave + 1, storage.size());
+            assertDoesNotThrow(() -> storage.save(ResumeTestData.getTestResume("valid", "valid")));
+            assertEquals(sizeBeforeTest + 1, storage.size());
         }
     }
 
@@ -54,10 +64,8 @@ public abstract class AbstractStorageTest {
         @Test
         @DisplayName("when resume is found")
         void testResumeFound() {
-            storage.save(new Resume("valid", "valid"));
-            int sizeBeforeDelete = storage.size();
-            assertDoesNotThrow(() -> storage.delete("valid"));
-            assertEquals(sizeBeforeDelete - 1, storage.size());
+            assertDoesNotThrow(() -> storage.delete("uuid1"));
+            assertEquals(sizeBeforeTest - 1, storage.size());
         }
     }
 
@@ -74,10 +82,8 @@ public abstract class AbstractStorageTest {
         @Test
         @DisplayName("when resume is found")
         void testResumeFound() {
-            Resume resume = new Resume("valid", "valid");
-            storage.save(resume);
-            assertDoesNotThrow(() -> storage.get("valid"));
-            assertEquals(resume, storage.get("valid"));
+            assertDoesNotThrow(() -> storage.get("uuid1"));
+            assertEquals(resume1, storage.get("uuid1"));
         }
     }
 
@@ -93,37 +99,29 @@ public abstract class AbstractStorageTest {
         @Test
         @DisplayName("when resume is found")
         void testResumeFound() {
-            storage.save(new Resume("valid", "valid"));
-            assertDoesNotThrow(() -> storage.update(new Resume("valid", "updated")));
-            assertEquals(1, storage.size());
-            assertEquals("updated", storage.get("valid").getFullName());
+            assertDoesNotThrow(() -> storage.update(ResumeTestData.getTestResume("uuid1", "updatedFullName")));
+            assertEquals(sizeBeforeTest, storage.size());
+            assertEquals("updatedFullName", storage.get("uuid1").getFullName());
         }
     }
 
     @Test
     void testClear() {
-        int num = 11;
-        fillStorage(num);
         storage.clear();
         assertEquals(0, storage.size());
     }
 
     @Test
     void testSize() {
-        int expected = 10;
-        fillStorage(expected);
-        assertEquals(expected, storage.size());
+        assertEquals(sizeBeforeTest, storage.size());
     }
 
     @Test
     void testGetAllSorted() {
-        int expectedSize = 13;
         List<Resume> expected = new ArrayList<>();
-        for (int i = 0; i < expectedSize; i++) {
-            Resume resume = new Resume("uuid" + i, "fullName" + i);
-            expected.add(resume);
-            storage.save(resume);
-        }
+        expected.add(resume1);
+        expected.add(resume2);
+        expected.add(resume3);
         List<Resume> actual = storage.getAllSorted();
         Collections.sort(expected);
         assertIterableEquals(expected, actual);

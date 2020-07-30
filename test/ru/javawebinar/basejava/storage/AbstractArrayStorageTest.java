@@ -16,7 +16,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test
     // @DisplayName("test save() method when storage is full")
     void testFullStorage() {
-        assertDoesNotThrow(() -> fillStorage(AbstractArrayStorage.STORAGE_LIMIT));
+        assertDoesNotThrow(() -> fillStorage(AbstractArrayStorage.STORAGE_LIMIT - storage.size()));
         assertThrows(StorageException.class, () -> storage.save(new Resume("fullName")));
     }
 }
