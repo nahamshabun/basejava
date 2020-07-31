@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class ResumeTestData {
-    public static Resume getTestResume(String uuid, String fullName) {
+    public static Resume getInstance(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
         resume.addContact(ContactType.PHONE, "89991234567");
@@ -49,7 +49,7 @@ public class ResumeTestData {
     }
 
 
-    public static Resume getTestResume(String fullName) {
-        return getTestResume(UUID.randomUUID().toString(), fullName);
+    public static Resume getInstance(String fullName) {
+        return getInstance(UUID.randomUUID().toString(), fullName);
     }
 }

@@ -9,17 +9,17 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.ResumeTestData;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
-    private static final Resume resume1 = ResumeTestData.getTestResume("uuid1", "fullName1");
-    private static final Resume resume2 = ResumeTestData.getTestResume("uuid2", "fullName2");
-    private static final Resume resume3 = ResumeTestData.getTestResume("uuid3", "fullName3");
-    private static final int sizeBeforeTest = 3;
+    private static final Resume resume1 = ResumeTestData.getInstance("uuid1", "fullName1");
+    private static final Resume resume2 = ResumeTestData.getInstance("uuid2", "fullName2");
+    private static final Resume resume3 = ResumeTestData.getInstance("uuid3", "fullName3");
+    protected static final int sizeBeforeTest = 3;
     Storage storage;
 
     public AbstractStorageTest(Storage storage) {
@@ -28,9 +28,9 @@ public abstract class AbstractStorageTest {
 
     @BeforeEach
     private void setUp() {
+        storage.save(resume3);
         storage.save(resume1);
         storage.save(resume2);
-        storage.save(resume3);
     }
 
     @Nested
@@ -44,9 +44,11 @@ public abstract class AbstractStorageTest {
         }
 
         @Test
-        @DisplayName("when resume not found")
+        @DisplayName("when resume is not found")
         void testResumeNotExist() {
-            assertDoesNotThrow(() -> storage.save(ResumeTestData.getTestResume("valid", "valid")));
+            Resume resume = ResumeTestData.getInstance("valid", "valid");
+            assertDoesNotThrow(() -> storage.save(resume));
+            assertEquals(resume, storage.get("valid"));
             assertEquals(sizeBeforeTest + 1, storage.size());
         }
     }
@@ -56,16 +58,17 @@ public abstract class AbstractStorageTest {
     class DeleteTests {
 
         @Test
-        @DisplayName("when resume not found")
-        void testResumeNotFound() {
+        @DisplayName("when resume is not found")
+        void testResumeNotExist() {
             assertThrows(NotExistStorageException.class, () -> storage.delete("dummy"));
         }
 
         @Test
         @DisplayName("when resume is found")
-        void testResumeFound() {
+        void testResumeExist() {
             assertDoesNotThrow(() -> storage.delete("uuid1"));
             assertEquals(sizeBeforeTest - 1, storage.size());
+            assertThrows(NotExistStorageException.class, () -> storage.delete("uuid1"));
         }
     }
 
@@ -74,14 +77,14 @@ public abstract class AbstractStorageTest {
     class GetTests {
 
         @Test
-        @DisplayName("when there not found")
-        void testResumeNotFound() {
+        @DisplayName("when there is not found")
+        void testResumeNotExist() {
             assertThrows(NotExistStorageException.class, () -> storage.get("dummy"));
         }
 
         @Test
         @DisplayName("when resume is found")
-        void testResumeFound() {
+        void testResumeExist() {
             assertDoesNotThrow(() -> storage.get("uuid1"));
             assertEquals(resume1, storage.get("uuid1"));
         }
@@ -91,17 +94,18 @@ public abstract class AbstractStorageTest {
     class UpdateTests {
 
         @Test
-        @DisplayName("when resume not found")
-        void testResumeNotFound() {
-            assertThrows(NotExistStorageException.class, () -> storage.update(ResumeTestData.getTestResume("dummy")));
+        @DisplayName("when resume is not found")
+        void testResumeNotExist() {
+            assertThrows(NotExistStorageException.class, () -> storage.update(ResumeTestData.getInstance("dummy")));
         }
 
         @Test
         @DisplayName("when resume is found")
-        void testResumeFound() {
-            assertDoesNotThrow(() -> storage.update(ResumeTestData.getTestResume("uuid1", "updatedFullName")));
+        void testResumeExist() {
+            Resume resume = ResumeTestData.getInstance("uuid1", "updatedFullName");
+            assertDoesNotThrow(() -> storage.update(resume));
+            assertEquals(resume, storage.get("uuid1"));
             assertEquals(sizeBeforeTest, storage.size());
-            assertEquals("updatedFullName", storage.get("uuid1").getFullName());
         }
     }
 
@@ -118,19 +122,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     void testGetAllSorted() {
-        List<Resume> expected = new ArrayList<>();
-        expected.add(resume1);
-        expected.add(resume2);
-        expected.add(resume3);
+        List<Resume> expected = Arrays.asList(resume3, resume1, resume2);
         List<Resume> actual = storage.getAllSorted();
         Collections.sort(expected);
         assertIterableEquals(expected, actual);
-    }
-
-    // helper methods
-    void fillStorage(int numOfResumes) {
-        for (int i = 0; i < numOfResumes; i++) {
-            storage.save(ResumeTestData.getTestResume("fullName" + i));
-        }
     }
 }

@@ -2,7 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import org.junit.jupiter.api.Test;
 import ru.javawebinar.basejava.exception.StorageException;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.ResumeTestData;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -16,7 +16,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test
     // @DisplayName("test save() method when storage is full")
     void testFullStorage() {
-        assertDoesNotThrow(() -> fillStorage(AbstractArrayStorage.STORAGE_LIMIT - storage.size()));
-        assertThrows(StorageException.class, () -> storage.save(new Resume("fullName")));
+        assertDoesNotThrow(() -> {
+            for (int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT - sizeBeforeTest; i++) {
+                storage.save(ResumeTestData.getInstance("fullName" + i));
+            }
+        });
+        assertThrows(StorageException.class, () -> storage.save(ResumeTestData.getInstance("fullName")));
     }
 }
