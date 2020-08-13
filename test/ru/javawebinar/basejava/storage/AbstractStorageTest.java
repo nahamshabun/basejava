@@ -9,13 +9,14 @@ import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.ResumeTestData;
 
+import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("D:\\dev\\basejava\\storage");
     private static final Resume resume1 = ResumeTestData.getInstance("uuid1", "fullName1");
     private static final Resume resume2 = ResumeTestData.getInstance("uuid2", "fullName2");
     private static final Resume resume3 = ResumeTestData.getInstance("uuid3", "fullName3");
@@ -28,6 +29,7 @@ public abstract class AbstractStorageTest {
 
     @BeforeEach
     private void setUp() {
+        storage.clear();
         storage.save(resume3);
         storage.save(resume1);
         storage.save(resume2);
@@ -77,7 +79,7 @@ public abstract class AbstractStorageTest {
     class GetTests {
 
         @Test
-        @DisplayName("when there is not found")
+        @DisplayName("when resume is not found")
         void testResumeNotExist() {
             assertThrows(NotExistStorageException.class, () -> storage.get("dummy"));
         }
@@ -122,9 +124,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     void testGetAllSorted() {
-        List<Resume> expected = Arrays.asList(resume2, resume3, resume1);
         List<Resume> actual = storage.getAllSorted();
-        Collections.sort(expected);
-        assertIterableEquals(expected, actual);
+        assertIterableEquals(Arrays.asList(resume1, resume2, resume3), actual);
     }
 }
