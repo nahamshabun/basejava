@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.YearMonth;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -18,6 +19,20 @@ public class Organization implements Serializable {
     public Organization(Link homePage, List<Period> periods) {
         this.homePage = homePage;
         this.periods = periods;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return Objects.equals(periods, that.periods) &&
+                Objects.equals(homePage, that.homePage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(periods, homePage);
     }
 
     @Override
@@ -36,6 +51,22 @@ public class Organization implements Serializable {
             this.to = to;
             this.title = title;
             this.description = description;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Period period = (Period) o;
+            return Objects.equals(from, period.from) &&
+                    Objects.equals(to, period.to) &&
+                    Objects.equals(title, period.title) &&
+                    Objects.equals(description, period.description);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(from, to, title, description);
         }
 
         @Override

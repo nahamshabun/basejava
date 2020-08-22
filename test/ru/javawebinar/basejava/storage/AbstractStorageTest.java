@@ -125,6 +125,7 @@ public abstract class AbstractStorageTest {
     @Test
     void testGetAllSorted() {
         List<Resume> actual = storage.getAllSorted();
-        assertIterableEquals(Arrays.asList(resume1, resume2, resume3), actual);
+        List<Resume> expected = Arrays.asList(resume1, resume2, resume3);
+        assertIterableEquals(expected, actual);
     }
 }

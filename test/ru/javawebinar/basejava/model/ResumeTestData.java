@@ -44,7 +44,6 @@ public class ResumeTestData {
                 new Organization.Period(YearMonth.of(2018, 6), YearMonth.of(2019, 1),
                         "ed2 period2 title", "ed1 period2 description"));
         resume.addSection(SectionType.EDUCATION, new OrganizationSection(Arrays.asList(ed1, ed2)));
-        System.out.println("resume created and returned");
         return resume;
     }
 
